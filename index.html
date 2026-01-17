@@ -244,11 +244,11 @@ button { cursor: pointer; }
     semana.className = "semana";
     calendario.appendChild(semana);
 
-    // 🔹 Ajuste para calendario que empieza en SÁB
-    let diaSemana = primerDia.getDay(); // 0=Domingo
-    diaSemana = (diaSemana + 2) % 7; // ahora sábado=0, jueves=5, etc.
+    // 🔹 Ajuste correcto: calendario empieza en SÁBADO
+    let diaSemana = primerDia.getDay(); // JS 0=domingo
+    diaSemana = (diaSemana + 1) % 7;   // ✅ ahora jueves se alinea correctamente
 
-    // 🔹 Agregar celdas vacías antes del primer día
+    // 🔹 Celdas vacías antes del primer día
     for (let i = 0; i < diaSemana; i++) {
       const vacio = document.createElement("div");
       vacio.className = "dia";
@@ -273,8 +273,8 @@ button { cursor: pointer; }
 
       semana.appendChild(div);
 
-      // 🔹 Crear nueva fila cada 7 días según calendario que empieza en SÁB
-      const diaCalendario = (fecha.getDay() + 2) % 7;
+      // 🔹 Nueva fila cada 7 días
+      const diaCalendario = (fecha.getDay() + 1) % 7;
       if (diaCalendario === 6 && d !== ultimoDia) {
         semana = document.createElement("div");
         semana.className = "semana";
