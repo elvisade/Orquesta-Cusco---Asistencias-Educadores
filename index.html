@@ -2,258 +2,250 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Asistencia Orquestando</title>
+<title>Asistencia Orquestando 2026</title>
+
+<!-- ICONOS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background-image: url("fondo-orquestando.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
   margin: 0;
-  padding: 0;
+  font-family: Arial, sans-serif;
+  background: url("fondo.jpg") no-repeat center center fixed;
+  background-size: cover;
 }
 
 .contenedor {
   background: rgba(255,255,255,0.93);
   max-width: 1200px;
-  margin: 30px auto;
+  margin: 20px auto;
   padding: 20px;
-  border-radius: 15px;
+  border-radius: 12px;
 }
 
 .logo {
-  max-width: 320px;
-  margin: 10px auto;
+  display: block;
+  margin: 0 auto 10px;
+  max-width: 220px;
 }
 
-select, input, button {
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.panel {
+  display: flex;
+  gap: 20px;
+}
+
+.acciones {
+  width: 320px;
+}
+
+.acciones select,
+.acciones input,
+.acciones button {
+  width: 100%;
   padding: 10px;
-  margin: 6px;
-  font-size: 14px;
+  margin-bottom: 10px;
 }
 
 button {
   cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
 }
 
-.encabezado-semana, .semana {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
+.entrada { background: #4CAF50; color: white; }
+.salida { background: #F44336; color: white; }
+.ver { background: #2196F3; color: white; }
+.excel { background: #2e7d32; color: white; }
+.editar { background: #FF9800; color: white; }
+
+#calendario-wrapper {
+  flex: 1;
 }
 
-.encabezado-semana div {
-  font-weight: bold;
-  background: #ddd;
-  padding: 8px;
-  border: 1px solid #bbb;
-}
-
-.dia {
-  border: 1px solid #ccc;
-  min-height: 95px;
-  padding: 6px;
-  font-size: 12px;
-}
-
-.fin-semana {
-  background: #ffe0e0;
-}
-
-.entrada {
-  border-left: 6px solid green;
-}
-
-.salida {
-  border-left: 6px solid blue;
-}
-
-/* 🔽 ESCALA DEL CALENDARIO (2/3) */
-.calendario-wrapper {
+#calendario {
   transform: scale(0.67);
   transform-origin: top center;
   margin-top: -120px;
+}
+
+.tabla-cal {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.tabla-cal th,
+.tabla-cal td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+.tabla-cal th {
+  background: #1976D2;
+  color: white;
+}
+
+.fin {
+  background: #FFE0B2;
+}
+
+.marcado {
+  background: #C8E6C9;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
 }
 </style>
 </head>
 
 <body>
+
 <div class="contenedor">
+<img src="logo.png" class="logo">
+<h1>CICLO VACACIONAL ORQUESTANDO 2026</h1>
 
-<img src="logo-orquestando.png" class="logo" alt="Orquestando">
+<div class="panel">
 
-<h1>SISTEMA DE ASISTENCIA – ORQUESTANDO</h1>
-
-<!-- EDUCADORES -->
+<div class="acciones">
 <select id="educador">
-  <option value="">👤 Seleccione educador</option>
-  <option>Elvis Ylla Uscamayta</option>
-  <option>Nilton Ibarra Vilchez</option>
-  <option>Hector Roberto Galvez Zuñiga</option>
+  <option value="Elvis Ylla Uscamayta">Elvis Ylla Uscamayta</option>
+  <option value="Nilton Ibarra Vilchez">Nilton Ibarra Vilchez</option>
+  <option value="Hector Roberto Galvez Zuñiga">Hector Roberto Galvez Zuñiga</option>
 </select>
 
-<!-- PIN (5 DÍGITOS) -->
-<input type="password" id="pin" placeholder="🔐 PIN 5 dígitos" maxlength="5">
+<input type="password" id="pin" placeholder="PIN 5 dígitos">
 
-<br>
+<button class="entrada" onclick="marcar('entrada')">
+<i class="fa-solid fa-right-to-bracket"></i> Marcar Entrada
+</button>
 
-<button onclick="marcar('entrada')">🟢 Entrada</button>
-<button onclick="marcar('salida')">🔵 Salida</button>
+<button class="salida" onclick="marcar('salida')">
+<i class="fa-solid fa-right-from-bracket"></i> Marcar Salida
+</button>
 
-<hr>
+<button class="ver" onclick="mostrarCalendario()">
+<i class="fa-solid fa-calendar-days"></i> Ver Asistencias
+</button>
 
-<select id="mes"></select>
-<select id="anio"></select>
+<button class="excel" onclick="descargarExcel()">
+<i class="fa-solid fa-file-excel"></i> Descargar Excel
+</button>
 
-<br>
-
-<button onclick="verAsistencias()">📅 Ver asistencias</button>
-<button onclick="descargarExcel()">📥 Descargar Excel</button>
-
-<!-- CALENDARIO -->
-<div class="calendario-wrapper">
-
-  <div class="encabezado-semana">
-    <div>SÁB</div>
-    <div>DOM</div>
-    <div>LUN</div>
-    <div>MAR</div>
-    <div>MIÉ</div>
-    <div>JUE</div>
-    <div>VIE</div>
-  </div>
-
-  <div id="calendario"></div>
-
+<button class="editar" onclick="editarDia()">
+<i class="fa-solid fa-pen"></i> Editar / Borrar Marca
+</button>
 </div>
 
+<div id="calendario-wrapper">
+  <div id="calendario"></div>
+</div>
+
+</div>
 </div>
 
 <script>
-/* 🔐 PINES DEFINITIVOS */
 const pines = {
   "Elvis Ylla Uscamayta": "20261",
   "Nilton Ibarra Vilchez": "20262",
   "Hector Roberto Galvez Zuñiga": "20263"
 };
 
-const mesSel = document.getElementById("mes");
-const anioSel = document.getElementById("anio");
-const educadorSel = document.getElementById("educador");
-const calendario = document.getElementById("calendario");
+let datos = JSON.parse(localStorage.getItem("asistencias") || "{}");
 
-/* MESES */
-["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]
-.forEach((m,i)=>mesSel.innerHTML+=`<option value="${i}">${m}</option>`);
-
-/* AÑOS */
-for (let y = 2026; y <= 2035; y++) {
-  anioSel.innerHTML += `<option>${y}</option>`;
+function hoy() {
+  return new Date().toISOString().split("T")[0];
 }
 
-/* MARCAR ASISTENCIA */
 function marcar(tipo) {
-  const educador = educadorSel.value;
-  const pin = document.getElementById("pin").value;
-
-  if (!educador) {
-    alert("Seleccione educador");
+  const edu = educador.value;
+  if (pin.value !== pines[edu]) {
+    alert("PIN incorrecto");
     return;
   }
-
-  if (pin !== pines[educador]) {
-    alert("❌ PIN incorrecto");
-    return;
-  }
-
-  const hoy = new Date();
-  const fecha = hoy.toISOString().split("T")[0];
-  const hora = hoy.toLocaleTimeString();
-
-  const key = `${educador}-${fecha}`;
-  const registro = JSON.parse(localStorage.getItem(key)) || {};
-  registro[tipo] = hora;
-  localStorage.setItem(key, JSON.stringify(registro));
-
-  alert(`✅ ${tipo.toUpperCase()} registrada`);
+  if (!datos[edu]) datos[edu] = {};
+  if (!datos[edu][hoy()]) datos[edu][hoy()] = {};
+  datos[edu][hoy()][tipo] = new Date().toLocaleTimeString();
+  guardar();
+  alert("Marcado correctamente");
 }
 
-/* VER ASISTENCIAS */
-function verAsistencias() {
-  calendario.innerHTML = "";
-  const educador = educadorSel.value;
-  if (!educador) {
-    alert("Seleccione educador");
-    return;
+function guardar() {
+  localStorage.setItem("asistencias", JSON.stringify(datos));
+}
+
+function mostrarCalendario() {
+  const fecha = new Date();
+  const y = fecha.getFullYear();
+  const m = fecha.getMonth();
+
+  let html = "<table class='tabla-cal'><tr>";
+  ["Sáb","Dom","Lun","Mar","Mié","Jue","Vie"].forEach(d=>html+=`<th>${d}</th>`);
+  html+="</tr><tr>";
+
+  let f = new Date(y,m,1);
+  let offset = (f.getDay()+1)%7;
+  for(let i=0;i<offset;i++) html+="<td></td>";
+
+  while(f.getMonth()===m){
+    const iso = f.toISOString().split("T")[0];
+    const dia = f.getDay();
+    const fin = dia===0||dia===6;
+    const marcado = datos[educador.value]?.[iso];
+    html+=`<td class="${fin?'fin':''} ${marcado?'marcado':''}">
+    ${f.getDate()}<br>
+    ${marcado?`E:${marcado.entrada||'-'}<br>S:${marcado.salida||'-'}`:""}
+    </td>`;
+    if(dia===5) html+="</tr><tr>";
+    f.setDate(f.getDate()+1);
   }
+  html+="</tr></table>";
+  calendario.innerHTML = html;
+}
 
-  const anio = anioSel.value;
-  const mes = mesSel.value;
-
-  const primerDia = new Date(anio, mes, 1);
-  const ultimoDia = new Date(anio, mes + 1, 0).getDate();
-
-  let inicio = (primerDia.getDay() + 1) % 7;
-  let semana = document.createElement("div");
-  semana.className = "semana";
-  calendario.appendChild(semana);
-
-  for (let i = 0; i < inicio; i++) {
-    semana.appendChild(document.createElement("div"));
-  }
-
-  for (let d = 1; d <= ultimoDia; d++) {
-    const fecha = new Date(anio, mes, d);
-    const diaJS = fecha.getDay();
-    const diaSemana = (diaJS + 1) % 7;
-
-    if (diaSemana === 0 && d !== 1) {
-      semana = document.createElement("div");
-      semana.className = "semana";
-      calendario.appendChild(semana);
+function descargarExcel(){
+  let csv="Educador,Fecha,Entrada,Salida\n";
+  for(let e in datos){
+    for(let d in datos[e]){
+      csv+=`${e},${d},${datos[e][d].entrada||""},${datos[e][d].salida||""}\n`;
     }
-
-    const key = `${educador}-${fecha.toISOString().split("T")[0]}`;
-    const r = JSON.parse(localStorage.getItem(key)) || {};
-
-    const div = document.createElement("div");
-    div.className = "dia";
-
-    if (diaJS === 0 || diaJS === 6) div.classList.add("fin-semana");
-    if (r.entrada) div.classList.add("entrada");
-    if (r.salida) div.classList.add("salida");
-
-    div.innerHTML = `
-      <strong>${d}</strong><br>
-      ${r.entrada ? "🟢 " + r.entrada : ""}
-      ${r.salida ? "<br>🔵 " + r.salida : ""}
-    `;
-
-    semana.appendChild(div);
   }
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
+  a.download="asistencias_orquestando.csv";
+  a.click();
 }
 
-/* DESCARGAR EXCEL */
-function descargarExcel() {
-  let csv = "Educador,Fecha,Entrada,Salida\n";
-
-  Object.keys(localStorage).forEach(k => {
-    if (!k.includes("-")) return;
-    const r = JSON.parse(localStorage[k]);
-    const partes = k.split("-");
-    const educador = partes.slice(0, partes.length - 1).join("-");
-    const fecha = partes[partes.length - 1];
-    csv += `${educador},${fecha},${r.entrada || ""},${r.salida || ""}\n`;
-  });
-
-  const blob = new Blob([csv], { type: "text/csv" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "asistencias_orquestando.csv";
-  a.click();
+function editarDia(){
+  const fecha=prompt("Fecha a editar (YYYY-MM-DD)");
+  const edu=educador.value;
+  if(datos[edu]?.[fecha]){
+    if(confirm("¿Borrar marcas de ese día?")){
+      delete datos[edu][fecha];
+      guardar();
+      mostrarCalendario();
+    }
+  }else{
+    alert("No hay registro");
+  }
 }
 </script>
 
