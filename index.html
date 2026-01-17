@@ -71,11 +71,11 @@ button {
   border-left: 6px solid blue;
 }
 
-/* 🔽 REDUCCIÓN DEL CALENDARIO A 2/3 🔽 */
-#calendario {
+/* 🔽 ESCALA DEL CALENDARIO (2/3) */
+.calendario-wrapper {
   transform: scale(0.67);
   transform-origin: top center;
-  margin-top: -130px;
+  margin-top: -120px;
 }
 </style>
 </head>
@@ -95,7 +95,8 @@ button {
   <option>Hector Roberto Galvez Zuñiga</option>
 </select>
 
-<input type="password" id="pin" placeholder="🔐 PIN 4 dígitos" maxlength="4">
+<!-- PIN (5 DÍGITOS) -->
+<input type="password" id="pin" placeholder="🔐 PIN 5 dígitos" maxlength="5">
 
 <br>
 
@@ -112,26 +113,31 @@ button {
 <button onclick="verAsistencias()">📅 Ver asistencias</button>
 <button onclick="descargarExcel()">📥 Descargar Excel</button>
 
-<!-- ENCABEZADO DE DÍAS -->
-<div class="encabezado-semana">
-  <div>SÁB</div>
-  <div>DOM</div>
-  <div>LUN</div>
-  <div>MAR</div>
-  <div>MIÉ</div>
-  <div>JUE</div>
-  <div>VIE</div>
-</div>
+<!-- CALENDARIO -->
+<div class="calendario-wrapper">
 
-<div id="calendario"></div>
+  <div class="encabezado-semana">
+    <div>SÁB</div>
+    <div>DOM</div>
+    <div>LUN</div>
+    <div>MAR</div>
+    <div>MIÉ</div>
+    <div>JUE</div>
+    <div>VIE</div>
+  </div>
+
+  <div id="calendario"></div>
+
+</div>
 
 </div>
 
 <script>
+/* 🔐 PINES DEFINITIVOS */
 const pines = {
-  "Elvis Ylla Uscamayta": "1234",
-  "Nilton Ibarra Vilchez": "2345",
-  "Hector Roberto Galvez Zuñiga": "3456"
+  "Elvis Ylla Uscamayta": "20261",
+  "Nilton Ibarra Vilchez": "20262",
+  "Hector Roberto Galvez Zuñiga": "20263"
 };
 
 const mesSel = document.getElementById("mes");
@@ -175,7 +181,7 @@ function marcar(tipo) {
   alert(`✅ ${tipo.toUpperCase()} registrada`);
 }
 
-/* VER CALENDARIO */
+/* VER ASISTENCIAS */
 function verAsistencias() {
   calendario.innerHTML = "";
   const educador = educadorSel.value;
